@@ -19,7 +19,7 @@ trait IntervalAnalysisWidening extends ValueAnalysisMisc with Dependencies[CfgNo
   /**
     * Int values occurring in the program, plus -infinity and +infinity.
     */
-  private val B = cfg.nodes.flatMap { n =>
+  protected val B = cfg.nodes.flatMap { n =>
     n.appearingConstants.map { x =>
       IntNum(x.value): Num
     } + MInf + PInf
@@ -35,7 +35,7 @@ trait IntervalAnalysisWidening extends ValueAnalysisMisc with Dependencies[CfgNo
     (x, y) match {
       case (IntervalLattice.EmptyInterval, _) => y
       case (_, IntervalLattice.EmptyInterval) => x
-      case ((l1, h1), (l2, h2)) => ??? //<--- Complete here
+      case ((l1, h1), (l2, h2)) => (if (l2 > l1) maxB(l2) else l1, if (h2 < h1) minB(h2) else h1) //<--- Complete here
     }
 
   def widen(x: liftedstatelattice.Element, y: liftedstatelattice.Element): liftedstatelattice.Element =
